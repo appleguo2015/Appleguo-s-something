@@ -18,7 +18,7 @@ out:
 
 assets: | out
 	mkdir -p $(ASSET_DIR)
-	cp -R assets/. $(ASSET_DIR)/
+	rsync -a --delete assets/ $(ASSET_DIR)/
 
 run: all
 	cd out && ./virtual_singer

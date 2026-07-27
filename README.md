@@ -4,7 +4,7 @@
 音素，逐段播放 `TTS.sb3` 中的采样，并在说话时挤压整个角色模型。
 
 当前使用的音素库来自 `TTS_2.0.sb3`，包括新补录的 `T.wav`。
-`assets/music/background.wav` 会作为 30% 音量的循环背景音乐播放。
+`assets/music/background.ogg` 会作为 30% 音量的循环背景音乐播放。它是 22.05 kHz 的低码率 OGG，适合 8-bit 风格并保持较小体积。
 
 ## 构建与运行（macOS）
 
