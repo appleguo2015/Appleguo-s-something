@@ -204,12 +204,17 @@ int main() {
     Model model = LoadModel("assets/models/appleguo.glb");
     RenderTexture2D portrait = LoadRenderTexture(82, 92);
     Texture2D appleTile = LoadTexture("assets/images/apple_new.png");
+    Music backgroundMusic = LoadMusicStream("assets/music/background.wav");
+    backgroundMusic.looping = true;
+    SetMusicVolume(backgroundMusic, 0.18f);
+    PlayMusicStream(backgroundMusic);
     Voice voice;
     voice.Load();
     std::string input = "HH EH L OW  W ER L D";
     std::string lastSentence = input;
     bool inputActive = true;
     while (!WindowShouldClose()) {
+        UpdateMusicStream(backgroundMusic);
         voice.Update();
         Rectangle inputRect{10, 193, 220, 36};
         Rectangle speakRect{240, 193, 50, 36};
@@ -294,6 +299,8 @@ int main() {
     }
 
     voice.Unload();
+    StopMusicStream(backgroundMusic);
+    UnloadMusicStream(backgroundMusic);
     UnloadTexture(appleTile);
     UnloadRenderTexture(portrait);
     UnloadModel(model);
