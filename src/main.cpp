@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <cmath>
 #include <deque>
+#include <filesystem>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -192,9 +193,23 @@ bool PlayButton(Rectangle rect, Color color) {
     return hover && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 }
 
+void UseApplicationResources() {
+    namespace fs = std::filesystem;
+    const fs::path executableDirectory = GetApplicationDirectory();
+    const fs::path bundledResources = executableDirectory / ".." / "Resources";
+
+    // A macOS .app keeps assets in Contents/Resources. Portable Windows and
+    // Linux builds keep the assets beside the executable in an assets folder.
+    const fs::path resourceDirectory = fs::is_directory(bundledResources / "assets")
+        ? bundledResources
+        : executableDirectory;
+    ChangeDirectory(resourceDirectory.string().c_str());
+}
+
 } // namespace
 
 int main() {
+    UseApplicationResources();
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(kWidth, kHeight, "appleguo voice");
     SetExitKey(KEY_NULL);
@@ -204,16 +219,36 @@ int main() {
     Model model = LoadModel("assets/models/appleguo.glb");
     RenderTexture2D portrait = LoadRenderTexture(82, 92);
     Texture2D appleTile = LoadTexture("assets/images/apple_new.png");
-    Sound backgroundMusic = LoadSound("assets/music/background.ogg");
+    // Sound playback state can remain "playing" after an OGG ends on some
+    // backends. Drive the BGM loop from the decoded file's real duration instead.
+    Wave backgroundWave = LoadWave("assets/music/background.ogg");
+    const double backgroundDuration = static_cast<double>(backgroundWave.frameCount) /
+                                    static_cast<double>(backgroundWave.sampleRate);
+    Sound backgroundMusic = LoadSoundFromWave(backgroundWave);
+    UnloadWave(backgroundWave);
     SetSoundVolume(backgroundMusic, 0.30f);
     PlaySound(backgroundMusic);
+    double backgroundCycleStartedAt = GetTime();
+    int backgroundCycle = 1;
+    double backgroundRestartedAt = -1.0;
     Voice voice;
     voice.Load();
     std::string input = "HH EH L OW  W ER L D";
     std::string lastSentence = input;
     bool inputActive = true;
     while (!WindowShouldClose()) {
-        if (!IsSoundPlaying(backgroundMusic)) PlaySound(backgroundMusic);
+        const double nowTime = GetTime();
+        // Restart a few milliseconds early so the next cycle is audible without
+        // relying on IsSoundPlaying(), which can stay true after an OGG ends.
+        if (nowTime - backgroundCycleStartedAt >= backgroundDuration - 0.01) {
+            StopSound(backgroundMusic);
+            PlaySound(backgroundMusic);
+            backgroundCycleStartedAt = nowTime;
+            backgroundRestartedAt = nowTime;
+            ++backgroundCycle;
+            TraceLog(LOG_INFO, "BGM loop restart: cycle %d at %.2f seconds", backgroundCycle, nowTime);
+        }
+        const double backgroundElapsed = nowTime - backgroundCycleStartedAt;
         voice.Update();
         Rectangle inputRect{10, 193, 220, 36};
         Rectangle speakRect{240, 193, 50, 36};
@@ -278,6 +313,10 @@ int main() {
                  voice.Playing() ? Color{112, 94, 40, 255} : Color{148, 111, 46, 255});
         DrawText("BGM LOOP", 232, 109, 8, {138, 94, 31, 255});
         DrawLine(111, 118, 288, 118, {185, 128, 37, 150});
+        const char* restartMark = nowTime - backgroundRestartedAt < 0.8 ? " R" : "";
+        DrawText(TextFormat("%02d %04.1f/%04.1f%s", backgroundCycle,
+                            backgroundElapsed, backgroundDuration, restartMark),
+                 232, 120, 8, {138, 94, 31, 255});
         DrawText("PHONEME INPUT", 11, 176, 10, {126, 83, 27, 255});
 
         DrawRectangleRec(inputRect, inputActive ? Color{255, 238, 183, 255} : Color{252, 229, 157, 255});

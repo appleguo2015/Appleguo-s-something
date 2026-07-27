@@ -1,0 +1,95 @@
+name: Build release packages
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  portable:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact: appleguo-voice-linux
+            install: sudo apt-get update && sudo apt-get install -y build-essential pkg-config libraylib-dev
+          - os: windows-latest
+            artifact: appleguo-voice-windows
+            install: ''
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: ${{ matrix.install }}
+      - name: Set up MSYS2
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: mingw-w64-x86_64-gcc mingw-w64-x86_64-raylib mingw-w64-x86_64-pkgconf mingw-w64-x86_64-imagemagick make
+      - name: Build Windows package
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: make
+      - name: Build Linux package
+        if: runner.os == 'Linux'
+        run: make STATIC=1
+      - name: Prepare Linux portable application
+        if: runner.os == 'Linux'
+        run: ./scripts/package-linux.sh
+      - name: Prepare Windows portable application
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: |
+          mkdir -p package
+          cp -R out/assets package/assets
+          cp out/virtual_singer.exe package/
+          ldd out/virtual_singer.exe | awk '/=> \/mingw64\/bin/ { print $3 }' | while read -r library; do cp "$library" package/; done
+      - name: Archive Windows application
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: Compress-Archive -Path package\* -DestinationPath ${{ matrix.artifact }}.zip
+      - name: Archive Linux application
+        if: runner.os == 'Linux'
+        run: |
+          tar -czf ${{ matrix.artifact }}.tar.gz -C package .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ runner.os == 'Windows' && format('{0}.zip', matrix.artifact) || format('{0}.tar.gz', matrix.artifact) }}
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: brew install raylib pkg-config imagemagick
+      - name: Build distributable macOS app
+        run: make app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: appleguo-voice-macos
+          path: dist/appleguo-voice-macos.zip
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [portable, macos]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: release/**/*
