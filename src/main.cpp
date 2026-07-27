@@ -38,11 +38,6 @@ const std::unordered_map<std::string, std::vector<std::string>> kDictionary = {
     {"you", {"Y", "UW"}}, {"your", {"Y", "AO", "R"}}
 };
 
-bool IsVowel(const std::string& p) {
-    static const std::string vowels = " AA AE AH AO AX ER EH IH IY UH UW AY AW EY OW OY ";
-    return vowels.find(" " + p + " ") != std::string::npos;
-}
-
 bool IsKnownPhoneme(const std::string& token) {
     return std::find(kPhonemeNames.begin(), kPhonemeNames.end(), token) != kPhonemeNames.end();
 }
@@ -187,22 +182,6 @@ private:
     double nextStartTime_ = 0.0;
     double finishTime_ = 0.0;
 };
-
-bool Button(Rectangle rect, const char* label, Color color) {
-    const bool hover = CheckCollisionPointRec(GetMousePosition(), rect);
-    DrawRectangleRounded(rect, 0.16f, 5, hover ? ColorBrightness(color, 0.12f) : color);
-    const int width = MeasureText(label, 18);
-    DrawText(label, static_cast<int>(rect.x + (rect.width - width) / 2), static_cast<int>(rect.y + 13), 18, WHITE);
-    return hover && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-}
-
-void DrawApple(Vector2 center, float radius, Color color) {
-    DrawCircleV({center.x - radius * 0.31f, center.y + radius * 0.08f}, radius * 0.63f, color);
-    DrawCircleV({center.x + radius * 0.31f, center.y + radius * 0.08f}, radius * 0.63f, color);
-    DrawTriangle({center.x, center.y - radius * 0.34f},
-                 {center.x + radius * 0.66f, center.y - radius * 0.76f},
-                 {center.x + radius * 0.76f, center.y - radius * 0.13f}, color);
-}
 
 bool PlayButton(Rectangle rect, Color color) {
     const bool hover = CheckCollisionPointRec(GetMousePosition(), rect);

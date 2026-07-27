@@ -7,12 +7,11 @@
 
 ## 构建与运行（macOS）
 
-依赖 CMake、C++17 和 raylib 5.5。本机已经具备这些依赖。
+依赖 `make`、C++17、pkg-config 和 raylib 5.5。本机已经具备这些依赖。
 
 ```bash
-cmake -S . -B build
-cmake --build build -j
-./build/virtual_singer
+make
+make run
 ```
 
 操作：
