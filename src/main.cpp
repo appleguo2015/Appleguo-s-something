@@ -206,7 +206,7 @@ int main() {
     Texture2D appleTile = LoadTexture("assets/images/apple_new.png");
     Music backgroundMusic = LoadMusicStream("assets/music/background.wav");
     backgroundMusic.looping = true;
-    SetMusicVolume(backgroundMusic, 0.18f);
+    SetMusicVolume(backgroundMusic, 0.30f);
     PlayMusicStream(backgroundMusic);
     Voice voice;
     voice.Load();
@@ -215,6 +215,11 @@ int main() {
     bool inputActive = true;
     while (!WindowShouldClose()) {
         UpdateMusicStream(backgroundMusic);
+        const float musicLength = GetMusicTimeLength(backgroundMusic);
+        if (musicLength > 0.0f && GetMusicTimePlayed(backgroundMusic) >= musicLength - 0.03f) {
+            SeekMusicStream(backgroundMusic, 0.0f);
+        }
+        if (!IsMusicStreamPlaying(backgroundMusic)) PlayMusicStream(backgroundMusic);
         voice.Update();
         Rectangle inputRect{10, 193, 220, 36};
         Rectangle speakRect{240, 193, 50, 36};
@@ -277,6 +282,7 @@ int main() {
         DrawText(now.c_str(), 110, 42, 42, voice.Playing() ? Color{188, 77, 31, 255} : Color{157, 109, 38, 255});
         DrawText(voice.Playing() ? "VOICE ACTIVE" : "WAITING", 113, 92, 12,
                  voice.Playing() ? Color{112, 94, 40, 255} : Color{148, 111, 46, 255});
+        DrawText("BGM LOOP", 232, 109, 8, {138, 94, 31, 255});
         DrawLine(111, 118, 288, 118, {185, 128, 37, 150});
         DrawText("PHONEME INPUT", 11, 176, 10, {126, 83, 27, 255});
 
