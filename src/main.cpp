@@ -5,7 +5,6 @@
 #include <cctype>
 #include <cstdint>
 #include <cmath>
-#include <cstring>
 #include <deque>
 #include <string>
 #include <unordered_map>
@@ -184,59 +183,6 @@ private:
     double finishTime_ = 0.0;
 };
 
-class LoopingBackground {
-public:
-    bool Load(const char* path) {
-        wave_ = LoadWave(path);
-        if (wave_.frameCount == 0 || wave_.data == nullptr) return false;
-
-        bytesPerFrame_ = (wave_.sampleSize / 8) * wave_.channels;
-        stream_ = LoadAudioStream(wave_.sampleRate, wave_.sampleSize, wave_.channels);
-        refill_.resize(kFramesPerUpdate * bytesPerFrame_);
-        SetAudioStreamVolume(stream_, 0.30f);
-        PlayAudioStream(stream_);
-        FillBuffer();
-        loaded_ = true;
-        return true;
-    }
-
-    void Update() {
-        if (loaded_ && IsAudioStreamProcessed(stream_)) FillBuffer();
-    }
-
-    void Unload() {
-        if (!loaded_) return;
-        StopAudioStream(stream_);
-        UnloadAudioStream(stream_);
-        UnloadWave(wave_);
-        loaded_ = false;
-    }
-
-private:
-    void FillBuffer() {
-        auto* source = static_cast<const unsigned char*>(wave_.data);
-        unsigned int written = 0;
-        while (written < kFramesPerUpdate) {
-            const unsigned int available = wave_.frameCount - cursor_;
-            const unsigned int frames = std::min(kFramesPerUpdate - written, available);
-            std::memcpy(refill_.data() + written * bytesPerFrame_, source + cursor_ * bytesPerFrame_,
-                        frames * bytesPerFrame_);
-            written += frames;
-            cursor_ = (cursor_ + frames) % wave_.frameCount;
-        }
-        UpdateAudioStream(stream_, refill_.data(), kFramesPerUpdate);
-    }
-
-    // raylib's 4096-byte stereo buffer holds 1024 frames at 16-bit depth.
-    static constexpr unsigned int kFramesPerUpdate = 1024;
-    Wave wave_{};
-    AudioStream stream_{};
-    std::vector<unsigned char> refill_;
-    unsigned int bytesPerFrame_ = 0;
-    unsigned int cursor_ = 0;
-    bool loaded_ = false;
-};
-
 bool PlayButton(Rectangle rect, Color color) {
     const bool hover = CheckCollisionPointRec(GetMousePosition(), rect);
     DrawRectangleRec(rect, hover ? ColorBrightness(color, 0.10f) : color);
@@ -258,15 +204,16 @@ int main() {
     Model model = LoadModel("assets/models/appleguo.glb");
     RenderTexture2D portrait = LoadRenderTexture(82, 92);
     Texture2D appleTile = LoadTexture("assets/images/apple_new.png");
-    LoopingBackground backgroundMusic;
-    backgroundMusic.Load("assets/music/background.ogg");
+    Sound backgroundMusic = LoadSound("assets/music/background.ogg");
+    SetSoundVolume(backgroundMusic, 0.30f);
+    PlaySound(backgroundMusic);
     Voice voice;
     voice.Load();
     std::string input = "HH EH L OW  W ER L D";
     std::string lastSentence = input;
     bool inputActive = true;
     while (!WindowShouldClose()) {
-        backgroundMusic.Update();
+        if (!IsSoundPlaying(backgroundMusic)) PlaySound(backgroundMusic);
         voice.Update();
         Rectangle inputRect{10, 193, 220, 36};
         Rectangle speakRect{240, 193, 50, 36};
@@ -352,7 +299,8 @@ int main() {
     }
 
     voice.Unload();
-    backgroundMusic.Unload();
+    StopSound(backgroundMusic);
+    UnloadSound(backgroundMusic);
     UnloadTexture(appleTile);
     UnloadRenderTexture(portrait);
     UnloadModel(model);
