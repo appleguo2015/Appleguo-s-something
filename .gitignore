@@ -1,0 +1,4 @@
+build/
+.DS_Store
+*.blend1
+*_backup*.blend
