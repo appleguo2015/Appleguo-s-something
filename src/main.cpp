@@ -192,16 +192,6 @@ bool PlayButton(Rectangle rect, Color color) {
     return hover && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 }
 
-bool PhonemePad(Rectangle rect, const char* phoneme, Color color) {
-    const bool hover = CheckCollisionPointRec(GetMousePosition(), rect);
-    DrawRectangleRec(rect, hover ? ColorBrightness(color, 0.12f) : color);
-    DrawRectangleLinesEx(rect, 1, {150, 86, 20, 120});
-    const int labelWidth = MeasureText(phoneme, 12);
-    DrawText(phoneme, static_cast<int>(rect.x + (rect.width - labelWidth) * 0.5f),
-             static_cast<int>(rect.y + 5), 12, {92, 54, 19, 255});
-    return hover && IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-}
-
 } // namespace
 
 int main() {
@@ -223,7 +213,6 @@ int main() {
         voice.Update();
         Rectangle inputRect{10, 193, 220, 36};
         Rectangle speakRect{240, 193, 50, 36};
-        static constexpr const char* quickPads[] = {"AA", "AH", "EH", "IY", "OW", "SH", "T", "K"};
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) inputActive = CheckCollisionPointRec(GetMousePosition(), inputRect);
         if (inputActive) {
@@ -236,13 +225,6 @@ int main() {
         }
         bool requestSpeak = IsKeyPressed(KEY_ENTER);
         if (IsKeyPressed(KEY_ESCAPE)) voice.Stop();
-
-        for (int i = 0; i < 8; ++i) {
-            Rectangle padRect{8.0f + i * 36.0f, 145, 32, 23};
-            if (CheckCollisionPointRec(GetMousePosition(), padRect) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                voice.Speak(quickPads[i]);
-            }
-        }
 
         const float bob = std::sin(GetTime() * 1.8) * 0.045f;
         float scaleXz = 0.78f;
@@ -291,15 +273,7 @@ int main() {
         DrawText(voice.Playing() ? "VOICE ACTIVE" : "WAITING", 113, 92, 12,
                  voice.Playing() ? Color{112, 94, 40, 255} : Color{148, 111, 46, 255});
         DrawLine(111, 118, 288, 118, {185, 128, 37, 150});
-        DrawText("TAP A SOUND", 10, 128, 10, {126, 83, 27, 255});
-        for (int i = 0; i < 8; ++i) {
-            Rectangle padRect{8.0f + i * 36.0f, 145, 32, 23};
-            const Color padColor = (voice.Playing() && voice.Current() == quickPads[i])
-                                       ? Color{238, 164, 61, 255}
-                                       : Color{250, 218, 132, 255};
-            PhonemePad(padRect, quickPads[i], padColor);
-        }
-        DrawText("BUILD A PHONEME LINE", 11, 176, 10, {126, 83, 27, 255});
+        DrawText("PHONEME INPUT", 11, 176, 10, {126, 83, 27, 255});
 
         DrawRectangleRec(inputRect, inputActive ? Color{255, 238, 183, 255} : Color{252, 229, 157, 255});
         DrawRectangleLinesEx(inputRect, 1, {179, 119, 30, 255});
