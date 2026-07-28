@@ -3,139 +3,130 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="AppleGuo's something: small strange things for your computer.">
+  <meta name="description" content="AppleGuo's strange little software cabinet.">
   <title>AppleGuo's Something</title>
   <link rel="icon" href="assets/images/apple.png">
-  <script src="https://unpkg.com/lucide@0.468.0"></script>
   <style>
-    :root { --ink: #1e1b14; --paper: #fff8df; --yellow: #ffd45d; --red: #ef4b38; --blue: #2c82b9; --green: #63b35d; --line: 3px solid var(--ink); }
+    :root { --ink: #151515; --paper: #fff; --acid: #dfff00; --red: #f1463c; --blue: #4b69ff; --line: 2px solid var(--ink); }
     * { box-sizing: border-box; }
-    html { background: var(--blue); }
-    body { min-width: 320px; margin: 0; color: var(--ink); font-family: "Courier New", monospace; background-color: var(--yellow); }
-    a { color: inherit; }
-    .ticker { overflow: hidden; white-space: nowrap; border-bottom: var(--line); background: var(--ink); color: var(--yellow); font-size: 13px; font-weight: 700; line-height: 30px; }
-    .ticker span { display: inline-block; padding-left: 100%; animation: crawl 22s linear infinite; }
-    @keyframes crawl { to { transform: translateX(-100%); } }
-    .shell { width: min(1120px, calc(100% - 28px)); margin: 14px auto; border: var(--line); background: var(--paper); box-shadow: 10px 10px 0 var(--ink); }
-    header { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 14px 18px; border-bottom: var(--line); background: var(--paper); }
-    .logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; text-decoration: none; }
-    .logo-mark { width: 28px; height: 28px; display: grid; place-items: center; color: var(--paper); background: var(--red); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
-    .top-note { margin: 0; font-size: 12px; text-align: right; }
-    .hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 300px; min-height: 450px; overflow: hidden; border-bottom: var(--line); background: var(--yellow); }
-    .hero::after { content: "APPLEGUO APPLEGUO APPLEGUO"; position: absolute; right: -94px; bottom: 18px; transform: rotate(-90deg); color: var(--ink); font-size: 14px; font-weight: 700; letter-spacing: 5px; opacity: .4; }
-    .hero-copy { z-index: 1; padding: 46px 24px 34px 34px; }
-    .stamp { display: inline-block; margin: 0 0 18px; padding: 6px 8px; border: 2px solid var(--ink); background: var(--green); font-size: 12px; font-weight: 700; transform: rotate(-2deg); }
-    h1 { max-width: 620px; margin: 0; font-size: 68px; line-height: .88; letter-spacing: 0; text-transform: uppercase; }
-    .hero-copy h1 span { display: block; color: var(--red); text-shadow: 3px 3px 0 var(--ink); }
-    .hero-copy p { max-width: 530px; margin: 24px 0 0; font-size: 16px; line-height: 1.55; }
-    .hero-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
-    .command { min-height: 44px; display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border: var(--line); box-shadow: 4px 4px 0 var(--ink); font: inherit; font-size: 13px; font-weight: 700; text-decoration: none; cursor: pointer; }
+    html { background: var(--paper); }
+    body { min-width: 320px; margin: 0; overflow-x: hidden; color: var(--ink); background: var(--paper); font-family: "Courier New", Courier, monospace; }
+    button, a { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    .topline { min-height: 34px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 14px; border-bottom: var(--line); font-size: 11px; font-weight: bold; }
+    .topline p { margin: 0; }
+    .sound-toggle { min-width: 106px; min-height: 24px; border: 1px solid var(--ink); background: var(--paper); font-size: 10px; font-weight: bold; }
+    .sound-toggle:hover { color: var(--paper); background: var(--ink); }
+    .page { width: min(1060px, calc(100% - 28px)); margin: 0 auto; padding-bottom: 40px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 19px 0; border-bottom: var(--line); }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-size: 17px; font-weight: bold; }
+    .logo img { width: 33px; height: 33px; object-fit: contain; }
+    .nav { display: flex; flex-wrap: wrap; justify-content: end; gap: 7px; }
+    .nav a, .micro-button { border: 1px solid var(--ink); background: var(--paper); padding: 5px 7px; text-decoration: none; font-size: 10px; font-weight: bold; }
+    .nav a:hover, .micro-button:hover { background: var(--acid); }
+    .hero { position: relative; min-height: 420px; display: grid; grid-template-columns: 1.35fr .65fr; border-bottom: var(--line); overflow: hidden; }
+    .hero-copy { position: relative; z-index: 1; padding: 46px 22px 36px 0; }
+    .hero-kicker { display: inline-block; margin: 0 0 18px; border: var(--line); padding: 5px 8px; background: var(--acid); font-size: 11px; font-weight: bold; transform: rotate(-1deg); }
+    h1 { max-width: 630px; margin: 0; font-size: clamp(44px, 7vw, 82px); line-height: .83; letter-spacing: 0; }
+    h1 em { color: var(--red); font-style: normal; }
+    .hero-copy > p:last-of-type { max-width: 535px; margin: 23px 0 0; font-size: 15px; line-height: 1.55; }
+    .commands { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 25px; }
+    .command { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 13px; border: var(--line); background: var(--paper); box-shadow: 4px 4px 0 var(--ink); font-size: 12px; font-weight: bold; text-decoration: none; }
     .command:hover, .command:focus-visible { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); outline: none; }
-    .command--black { color: var(--paper); background: var(--ink); }
-    .command--blue { background: var(--blue); }
-    .hero-art { position: relative; display: grid; place-items: center; border-left: var(--line); background: #f3b32f; }
-    .hero-art::after { content: "+ + + + + + + +"; position: absolute; left: 12px; right: 12px; bottom: 12px; overflow: hidden; color: var(--red); font-size: 23px; font-weight: 700; letter-spacing: 7px; }
-    .hero-art::before { content: "FRESH / WEIRD / OFFLINE / LOUD"; position: absolute; top: 19px; right: 13px; font-size: 10px; font-weight: 700; writing-mode: vertical-rl; }
-    .hero-art img { width: 255px; max-width: 85%; height: 345px; object-fit: contain; filter: drop-shadow(7px 8px 0 var(--ink)); transform: rotate(7deg); }
-    .squiggle { position: absolute; left: 15px; bottom: 17px; width: 48px; height: 48px; border: 6px dotted var(--red); border-radius: 50%; }
-    .control-strip { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 10px 14px; border-bottom: var(--line); background: var(--blue); color: var(--paper); font-size: 12px; font-weight: 700; }
-    .control-strip p { margin: 0; }
-    .icon-button { width: 36px; height: 32px; display: grid; place-items: center; border: 2px solid var(--ink); background: var(--yellow); color: var(--ink); cursor: pointer; }
-    .icon-button:hover, .icon-button:focus-visible { background: var(--red); outline: none; }
-    .feature { display: grid; grid-template-columns: 130px minmax(0, 1fr) 245px; border-bottom: var(--line); background: var(--paper); }
-    .serial { display: grid; place-items: center; min-height: 250px; padding: 16px; border-right: var(--line); background: var(--red); font-size: 18px; font-weight: 700; writing-mode: vertical-rl; transform: rotate(180deg); }
-    .feature-copy { padding: 30px; }
-    .feature-copy h2 { margin: 0; font-size: 39px; line-height: 1; }
-    .feature-copy p { max-width: 600px; margin: 16px 0 0; font-size: 15px; line-height: 1.55; }
-    .specs { align-self: stretch; padding: 22px; border-left: var(--line); background: #f5e7ae; font-size: 12px; line-height: 1.7; }
-    .specs p { margin: 0; border-bottom: 1px dashed var(--ink); }
-    .specs strong { display: block; }
-    .staff { padding: 30px; border-bottom: var(--line); background: var(--blue); }
-    .staff-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 18px; color: var(--paper); }
-    .staff-head h2 { margin: 0; font-size: 37px; line-height: 1; }
-    .staff-head p { margin: 0; font-size: 12px; text-align: right; }
-    .staff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .employee { position: relative; overflow: hidden; border: var(--line); background: var(--paper); box-shadow: 6px 6px 0 var(--ink); }
-    .employee img { width: 100%; aspect-ratio: 4 / 5; display: block; object-fit: cover; object-position: center top; border-bottom: var(--line); background: #f5e7ae; }
-    .employee--apple img { object-fit: contain; padding: 12px; background: var(--yellow); }
-    .employee h3 { min-height: 54px; display: flex; align-items: center; margin: 0; padding: 10px 12px; font-size: 16px; line-height: 1.15; }
-    .employee--award h3 { padding-right: 54px; color: var(--paper); background: var(--red); }
-    .award { position: absolute; right: 10px; bottom: 10px; width: 35px; height: 35px; display: grid; place-items: center; border: 2px solid var(--ink); background: var(--yellow); transform: rotate(11deg); }
-    .cabinet { padding: 30px; background: var(--green); border-bottom: var(--line); }
-    .cabinet-title { display: flex; justify-content: space-between; gap: 16px; align-items: end; margin-bottom: 18px; }
-    .cabinet h2 { margin: 0; font-size: 32px; }
-    .cabinet p { margin: 0; font-size: 12px; }
-    .slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .slot { min-height: 145px; padding: 15px; border: var(--line); background: var(--paper); box-shadow: 5px 5px 0 var(--ink); }
-    .slot h3 { margin: 0; font-size: 17px; }
-    .slot p { margin: 15px 0 0; font-size: 12px; line-height: 1.4; }
-    .slot--locked { color: #555046; background: #cac4ae; }
-    footer { display: flex; justify-content: space-between; gap: 18px; padding: 14px 18px; background: var(--ink); color: var(--paper); font-size: 11px; }
+    .command--dark { color: var(--paper); background: var(--ink); }
+    .command--red { background: var(--red); }
+    .apple-zone { position: relative; display: grid; place-items: center; border-left: var(--line); background: var(--paper); }
+    .apple-zone::after { content: "+  +  +  +  +  +  +"; position: absolute; right: 8px; bottom: 10px; color: #cfcfcf; font-size: 15px; font-weight: bold; letter-spacing: 2px; }
+    .apple-zone::before { content: "CLICK THE APPLE\A IT KNOWS THINGS"; position: absolute; top: 17px; right: 12px; white-space: pre; font-size: 10px; font-weight: bold; line-height: 1.3; text-align: right; }
+    .hero-apple { width: min(260px, 80%); height: 325px; object-fit: contain; filter: drop-shadow(7px 8px 0 var(--ink)); transform: rotate(5deg); cursor: pointer; transition: transform .15s ease; }
+    .hero-apple:hover { transform: rotate(-5deg) scale(1.04); }
+    .floating-word { position: absolute; bottom: 20px; left: -14px; padding: 4px 6px; border: 1px solid var(--ink); background: var(--blue); color: white; font-size: 11px; font-weight: bold; transform: rotate(-7deg); }
+    .statusbar { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; padding: 9px 0; border-bottom: var(--line); font-size: 11px; }
+    .status-text { margin: 0; min-height: 14px; font-weight: bold; }
+    .status-light { width: 12px; height: 12px; border: 1px solid var(--ink); border-radius: 50%; background: var(--red); }
+    .status-light.live { background: var(--acid); box-shadow: 0 0 0 3px #e9ffc6; }
+    .fun-button { min-height: 28px; border: 1px solid var(--ink); padding: 5px 8px; background: var(--paper); font-size: 10px; font-weight: bold; }
+    .fun-button:hover { background: var(--blue); color: white; }
+    .feature { display: grid; grid-template-columns: 112px minmax(0, 1fr) 214px; border-bottom: var(--line); }
+    .index { display: grid; place-items: center; min-height: 245px; border-right: var(--line); background: var(--acid); font-size: 17px; font-weight: bold; writing-mode: vertical-rl; transform: rotate(180deg); }
+    .feature-copy { padding: 29px 25px; }
+    h2 { margin: 0; font-size: 34px; line-height: .95; }
+    .feature-copy p { max-width: 570px; margin: 17px 0 0; font-size: 14px; line-height: 1.55; }
+    .specs { padding: 20px; border-left: var(--line); background: #f5f5f5; font-size: 11px; line-height: 1.55; }
+    .specs p { margin: 0; padding: 5px 0; border-bottom: 1px dashed #777; }
+    .staff { padding: 29px 0 34px; border-bottom: var(--line); }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 17px; }
+    .section-head p { margin: 0; max-width: 280px; font-size: 10px; line-height: 1.35; text-align: right; }
+    .staff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; }
+    .employee { position: relative; overflow: hidden; border: var(--line); background: var(--paper); box-shadow: 5px 5px 0 var(--ink); cursor: pointer; transition: transform .16s ease, box-shadow .16s ease; }
+    .employee:hover { transform: translate(-2px, -2px) rotate(-1deg); box-shadow: 8px 8px 0 var(--ink); }
+    .employee img { width: 100%; aspect-ratio: 1 / 1.04; display: block; object-fit: cover; object-position: center top; border-bottom: var(--line); background: #f3f3f3; }
+    .employee--apple img { padding: 13px; object-fit: contain; background: var(--acid); }
+    .employee h3 { min-height: 46px; display: flex; align-items: center; margin: 0; padding: 10px; font-size: 14px; }
+    .employee--banana h3 { color: white; background: var(--red); }
+    .badge { position: absolute; top: 8px; right: 8px; display: none; padding: 5px; border: 1px solid var(--ink); background: var(--acid); font-size: 10px; font-weight: bold; transform: rotate(8deg); }
+    .employee.active .badge { display: block; }
+    .cabinet { display: grid; grid-template-columns: 1.1fr .9fr; border-bottom: var(--line); }
+    .drawer-copy { padding: 28px 0 28px 0; }
+    .drawer-copy p { max-width: 500px; margin: 15px 0 0; font-size: 13px; line-height: 1.5; }
+    .drawer-controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-top: 17px; }
+    .drawer { min-height: 80px; padding: 10px; border: var(--line); background: var(--paper); font-size: 11px; font-weight: bold; text-align: left; }
+    .drawer:hover { background: var(--acid); transform: rotate(-1deg); }
+    .control-panel { margin: 25px 0 25px 24px; padding: 14px; border: var(--line); background: var(--ink); color: white; }
+    .control-panel h3 { margin: 0; font-size: 14px; }
+    .meter { height: 16px; margin: 15px 0 8px; overflow: hidden; border: 1px solid white; background: #333; }
+    .meter i { display: block; width: 21%; height: 100%; background: var(--acid); transition: width .2s ease; }
+    .control-panel p { margin: 0; font-size: 10px; }
+    footer { display: flex; justify-content: space-between; gap: 15px; padding: 15px 0; font-size: 10px; font-weight: bold; }
     footer p { margin: 0; }
-    body.dial-mode { --yellow: #ff5b4d; --red: #3b54cf; --blue: #65b35e; --green: #f1d759; }
-    @media (max-width: 720px) { .shell { width: min(100% - 18px, 560px); margin: 9px auto; box-shadow: 6px 6px 0 var(--ink); } header { padding: 12px; } .top-note { display: none; } .hero { grid-template-columns: 1fr; min-height: 0; } .hero-copy { padding: 30px 20px; } h1 { font-size: 48px; } .hero-art { min-height: 250px; border-top: var(--line); border-left: 0; } .hero-art img { height: 230px; } .feature { grid-template-columns: 70px 1fr; } .serial { min-height: 220px; font-size: 13px; } .feature-copy { padding: 24px 18px; } .feature-copy h2 { font-size: 30px; } .specs { grid-column: 1 / -1; border-top: var(--line); border-left: 0; } .staff { padding: 23px 18px; } .staff-head { align-items: start; flex-direction: column; } .staff-head h2 { font-size: 31px; } .staff-head p { text-align: left; } .staff-grid { grid-template-columns: 1fr; } .employee img { aspect-ratio: 4 / 4.3; } .slots { grid-template-columns: 1fr; } .cabinet { padding: 23px 18px; } footer { flex-direction: column; } }
+    .sticker { position: fixed; z-index: 5; display: grid; place-items: center; width: 72px; height: 72px; border: var(--line); border-radius: 50%; background: var(--acid); font-size: 10px; font-weight: bold; text-align: center; transform: rotate(12deg); cursor: pointer; }
+    .sticker--a { right: 20px; bottom: 22px; }
+    .sticker--b { left: 16px; bottom: 18%; width: 56px; height: 56px; background: var(--red); transform: rotate(-13deg); }
+    .sticker:hover { animation: spin .45s linear infinite; }
+    .signal-bad { --acid: #ffb000; --red: #a347ff; --blue: #00a293; }
+    .signal-bad .page { filter: contrast(1.1); }
+    .pop { position: fixed; z-index: 10; max-width: 190px; padding: 8px; border: var(--line); background: var(--paper); box-shadow: 4px 4px 0 var(--ink); font-size: 11px; font-weight: bold; pointer-events: none; animation: pop-out 1.7s ease forwards; }
+    @keyframes spin { to { transform: rotate(372deg); } }
+    @keyframes pop-out { 0%, 78% { opacity: 1; } 100% { opacity: 0; transform: translateY(-18px) rotate(4deg); } }
+    @media (max-width: 720px) { .page { width: min(100% - 20px, 560px); } .topline p:first-child { display: none; } header { align-items: start; flex-direction: column; } .nav { justify-content: start; } .hero { grid-template-columns: 1fr; } .hero-copy { padding: 34px 0 29px; } .apple-zone { min-height: 245px; border-top: var(--line); border-left: 0; } .hero-apple { height: 230px; } .feature { grid-template-columns: 66px 1fr; } .index { min-height: 210px; font-size: 13px; } .feature-copy { padding: 24px 17px; } .specs { grid-column: 1 / -1; border-top: var(--line); border-left: 0; } .staff { padding-top: 24px; } .section-head { align-items: start; flex-direction: column; } .section-head p { text-align: left; } .staff-grid { grid-template-columns: 1fr; } .employee img { aspect-ratio: 4 / 3; } .cabinet { grid-template-columns: 1fr; } .drawer-copy { padding: 24px 0; } .control-panel { margin: 0 0 25px; } .sticker--b { display: none; } footer { flex-direction: column; } }
   </style>
 </head>
 <body>
-  <div class="ticker"><span>APPLEGUO'S SOMETHING /// PERSONAL COMPUTER FUN /// SMALL THINGS WITH TOO MUCH PERSONALITY /// DOWNLOAD CABINET OPEN /// </span></div>
-  <main class="shell">
-    <header>
-      <a class="logo" href="#top"><span class="logo-mark"><i data-lucide="sparkles" aria-hidden="true"></i></span> APPLEGUO'S SOMETHING</a>
-      <p class="top-note">PERSONAL WEBSITE<br>EST. 2026 / EARTH</p>
-    </header>
-
+  <div class="topline"><p>APPLEGUO'S SOMETHING / EST. 2026 / EARTH</p><button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false" title="Enable or mute the page sounds">SOUND: WAITING</button></div>
+  <main class="page">
+    <header><a class="logo" href="#top"><img src="assets/images/apple.png" alt="">APPLEGUO'S SOMETHING</a><nav class="nav"><a href="#downloads">DOWNLOADS</a><a href="#staff">STAFF</a><a href="https://github.com/appleguo2015/Appleguo-s-something">GITHUB</a></nav></header>
     <section class="hero" id="top">
-      <div class="hero-copy">
-        <p class="stamp">!!! DO NOT ACT NORMAL !!!</p>
-        <h1>SMALL<br><span>STRANGE</span>THINGS<br>FOR YOUR COMPUTER</h1>
-        <p>AppleGuo makes tiny software, unfinished machines, sound toys, and other things that should probably not exist. This is the download cabinet.</p>
-        <div class="hero-links">
-          <a class="command command--black" href="#downloads"><i data-lucide="archive-download" aria-hidden="true"></i> OPEN CABINET</a>
-          <a class="command command--blue" href="https://github.com/appleguo2015/Appleguo-s-something/releases/tag/v0.1.9"><i data-lucide="github" aria-hidden="true"></i> GITHUB RELEASES</a>
-        </div>
-      </div>
-      <div class="hero-art" aria-label="AppleGuo apple artwork"><img src="assets/images/apple.png" alt="AppleGuo apple mascot"><span class="squiggle" aria-hidden="true"></span></div>
+      <div class="hero-copy"><p class="hero-kicker">PERSONAL COMPUTER OBJECTS / HANDLE CAREFULLY</p><h1>SMALL<br><em>STRANGE</em><br>THINGS</h1><p>tiny software, unfinished machines, sound toys, and other objects with a slightly wrong amount of personality. The download cabinet is open.</p><div class="commands"><a class="command command--dark" href="#downloads">OPEN CABINET</a><button class="command command--red" type="button" id="panic-button">PRESS FOR NO REASON</button></div></div>
+      <div class="apple-zone"><img class="hero-apple" id="hero-apple" src="assets/images/apple.png" alt="AppleGuo apple mascot"><span class="floating-word" id="apple-word">NORMAL APPLE</span></div>
     </section>
-
-    <div class="control-strip"><p>TRANSMISSION 001 / CURRENTLY TRANSMITTING: A TALKING APPLE</p><button class="icon-button" id="dial" type="button" title="Change signal mode" aria-label="Change signal mode"><i data-lucide="radio-tower" aria-hidden="true"></i></button></div>
-
-    <section class="feature" id="downloads">
-      <div class="serial">CABINET / 001</div>
-      <div class="feature-copy">
-        <h2>APPLEGUO<br>VOICE</h2>
-        <p>A tiny offline phoneme character. Type English or ARPAbet, press play, and let the apple read it in chopped little syllables while the 3D body squashes along.</p>
-        <div class="hero-links">
-          <a class="command command--black" href="https://github.com/appleguo2015/Appleguo-s-something/releases/download/v0.1.9/appleguo-voice-windows.zip"><i data-lucide="monitor-down" aria-hidden="true"></i> WINDOWS ZIP</a>
-          <a class="command command--blue" href="https://github.com/appleguo2015/Appleguo-s-something/releases/download/v0.1.9/appleguo-voice-macos.zip"><i data-lucide="download" aria-hidden="true"></i> MACOS ZIP</a>
-        </div>
-      </div>
-      <aside class="specs"><strong>FIELD NOTES</strong><p>OFFLINE / C++ / RAYLIB</p><p>ENGLISH PHONEMES</p><p>NO LIPSYNC</p><p>YES SQUASHING</p><p>VERSION 0.1.9</p></aside>
-    </section>
-
-    <section class="staff" id="staff">
-      <div class="staff-head"><h2>我们的员工</h2><p>REAL STAFF / VERY SERIOUS / PLEASE DO NOT ASK QUESTIONS</p></div>
-      <div class="staff-grid">
-        <article class="employee"><img src="assets/images/staff/potato.png" alt="土豆员工证件照"><h3>土豆</h3></article>
-        <article class="employee employee--award"><img src="assets/images/staff/banana.png" alt="香蕉员工证件照"><h3>[2026最佳员工]香蕉</h3><span class="award" title="2026最佳员工"><i data-lucide="award" aria-hidden="true"></i></span></article>
-        <article class="employee employee--apple"><img src="assets/images/apple.png" alt="appleguo"><h3>appleguo</h3></article>
-      </div>
-    </section>
-
-    <section class="cabinet">
-      <div class="cabinet-title"><h2>MORE DRAWERS</h2><p>THE NEXT THING IS ALWAYS LOADING</p></div>
-      <div class="slots">
-        <article class="slot"><h3>01 / APPLEGUO VOICE</h3><p>OPEN NOW. The first software thing from this cabinet.</p></article>
-        <article class="slot slot--locked"><h3>02 / ??????</h3><p>Signal detected. Object not yet ready for human hands.</p></article>
-        <article class="slot slot--locked"><h3>03 / ??????</h3><p>Awaiting a bad idea, a weekend, and too much tea.</p></article>
-      </div>
-    </section>
-
-    <footer><p>APPLEGUO'S SOMETHING / NO TRACKING / NO FEED / JUST OBJECTS</p><p id="counter">VISITOR COUNTER: 00000001</p></footer>
+    <section class="statusbar"><p class="status-text" id="status">SYSTEM STATUS: quietly suspicious</p><span class="status-light" id="status-light" aria-hidden="true"></span><button class="fun-button" type="button" id="signal-button">TUNE SIGNAL</button></section>
+    <section class="feature" id="downloads"><div class="index">CABINET / 001</div><div class="feature-copy"><h2>APPLEGUO<br>VOICE</h2><p>A tiny offline phoneme character. Type English or ARPAbet, press play, and let the apple read it in chopped little syllables while the 3D body squashes along.</p><div class="commands"><a class="command command--dark" href="https://github.com/appleguo2015/Appleguo-s-something/releases/download/v0.1.9/appleguo-voice-windows.zip">WINDOWS ZIP</a><a class="command" href="https://github.com/appleguo2015/Appleguo-s-something/releases/download/v0.1.9/appleguo-voice-macos.zip">MACOS ZIP</a></div></div><aside class="specs"><strong>FIELD NOTES</strong><p>OFFLINE / C++ / RAYLIB</p><p>ENGLISH PHONEMES</p><p>NO LIPSYNC</p><p>YES SQUASHING</p><p>VERSION 0.1.9</p></aside></section>
+    <section class="staff" id="staff"><div class="section-head"><h2>我们的员工</h2><p>REAL STAFF / VERY SERIOUS / CLICK THEM, THEY ARE ALL TRAINED FOR THIS</p></div><div class="staff-grid"><article class="employee" data-person="potato"><img src="assets/images/staff/potato.png" alt="土豆员工证件照"><h3>土豆</h3><span class="badge">APPROVED</span></article><article class="employee employee--banana" data-person="banana"><img src="assets/images/staff/banana.png" alt="香蕉员工证件照"><h3>[2026最佳员工]香蕉</h3><span class="badge">AWARD AGAIN</span></article><article class="employee employee--apple" data-person="apple"><img src="assets/images/apple.png" alt="appleguo"><h3>appleguo</h3><span class="badge">BEEP!</span></article></div></section>
+    <section class="cabinet"><div class="drawer-copy"><h2>MORE DRAWERS</h2><p>There is no product roadmap. There are only drawers, noises, and the faint possibility of an object becoming real.</p><div class="drawer-controls"><button class="drawer" type="button" data-drawer="01">01 / POKE THE DRAWER</button><button class="drawer" type="button" data-drawer="02">02 / BAD IDEA</button><button class="drawer" type="button" data-drawer="03">03 / CALL IT ART</button></div></div><aside class="control-panel"><h3>QUESTIONABLE DEVICE</h3><div class="meter"><i id="meter-fill"></i></div><p id="meter-label">ABSURDITY: 21%</p></aside></section>
+    <footer><p>NO TRACKING / NO FEED / JUST OBJECTS</p><p id="counter">VISITOR COUNTER: 00000001</p></footer>
   </main>
+  <button class="sticker sticker--b" type="button" id="tiny-sticker" aria-label="Small strange sticker">?</button><button class="sticker sticker--a" type="button" id="big-sticker">DO NOT<br>PRESS</button>
   <script>
-    lucide.createIcons({ attrs: { "stroke-width": 2.4 } });
-    const dial = document.querySelector("#dial");
-    dial.addEventListener("click", () => document.body.classList.toggle("dial-mode"));
+    (() => {
+      const statuses = ["SYSTEM STATUS: quietly suspicious", "SYSTEM STATUS: banana has authority", "SYSTEM STATUS: potato is compiling", "SYSTEM STATUS: apple is listening", "SYSTEM STATUS: 4 tiny alarms ringing"];
+      const appleWords = ["NORMAL APPLE", "VERY NORMAL", "APPLE ONLINE", "DO NOT ASK", "HELLO COMPUTER"];
+      const status = document.querySelector("#status"), light = document.querySelector("#status-light"), soundToggle = document.querySelector("#sound-toggle"), meter = document.querySelector("#meter-fill"), meterLabel = document.querySelector("#meter-label");
+      let audio, muted = false, strange = 21, visitor = 1;
+      const setStatus = (text) => { status.textContent = text; light.classList.add("live"); setTimeout(() => light.classList.remove("live"), 250); };
+      const initAudio = () => { if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)(); if (audio.state === "suspended") audio.resume(); soundToggle.textContent = muted ? "SOUND: MUTED" : "SOUND: ON"; soundToggle.setAttribute("aria-pressed", String(!muted)); };
+      const tone = (freq, duration = .08, type = "square", slide = 0, volume = .04) => { initAudio(); if (muted) return; const osc = audio.createOscillator(), gain = audio.createGain(); osc.type = type; osc.frequency.setValueAtTime(freq, audio.currentTime); osc.frequency.linearRampToValueAtTime(Math.max(35, freq + slide), audio.currentTime + duration); gain.gain.setValueAtTime(volume, audio.currentTime); gain.gain.exponentialRampToValueAtTime(.001, audio.currentTime + duration); osc.connect(gain).connect(audio.destination); osc.start(); osc.stop(audio.currentTime + duration); };
+      const pop = (text, event) => { const el = document.createElement("span"); el.className = "pop"; el.textContent = text; el.style.left = `${Math.min(event?.clientX || innerWidth / 2, innerWidth - 205)}px`; el.style.top = `${Math.min(event?.clientY || innerHeight / 2, innerHeight - 80)}px`; document.body.append(el); setTimeout(() => el.remove(), 1800); };
+      const increase = (amount) => { strange = Math.min(100, strange + amount); meter.style.width = `${strange}%`; meterLabel.textContent = `ABSURDITY: ${strange}%`; };
+      soundToggle.addEventListener("click", () => { initAudio(); muted = !muted; soundToggle.textContent = muted ? "SOUND: MUTED" : "SOUND: ON"; if (!muted) tone(660, .06, "sine", 180); });
+      document.querySelector("#hero-apple").addEventListener("click", (event) => { const word = appleWords[Math.floor(Math.random() * appleWords.length)]; document.querySelector("#apple-word").textContent = word; tone(440, .12, "sine", 250); tone(720, .08, "square", -90, .025); increase(7); pop(word, event); });
+      document.querySelector("#panic-button").addEventListener("click", (event) => { tone(180, .14, "sawtooth", 340); tone(710, .09, "square", -210, .025); setStatus("SYSTEM STATUS: button successfully bothered"); increase(12); pop("IT DID SOMETHING. PROBABLY.", event); });
+      document.querySelector("#signal-button").addEventListener("click", (event) => { document.body.classList.toggle("signal-bad"); tone(260, .1, "square", 80); setStatus(document.body.classList.contains("signal-bad") ? "SYSTEM STATUS: bad signal selected" : "SYSTEM STATUS: signal almost repaired"); pop("SIGNAL MOVED 2MM TO THE LEFT", event); });
+      document.querySelectorAll(".employee").forEach((card) => card.addEventListener("click", (event) => { const who = card.dataset.person; document.querySelectorAll(".employee").forEach((el) => el.classList.remove("active")); card.classList.add("active"); if (who === "potato") { tone(92, .16, "sine", -25); setStatus("SYSTEM STATUS: 土豆 signed the paperwork"); pop("A SMALL, DIGNIFIED THUD", event); } if (who === "banana") { [523, 659, 784].forEach((f, i) => setTimeout(() => tone(f, .1, "square", 0, .03), i * 85)); setStatus("SYSTEM STATUS: 香蕉 won again"); pop("[2026 BEST EMPLOYEE] CONFIRMED", event); } if (who === "apple") { tone(510, .18, "sine", 130); setStatus("SYSTEM STATUS: appleguo says beep"); pop("BEEP. THIS IS A PERFORMANCE REVIEW.", event); } increase(8); }));
+      document.querySelectorAll(".drawer").forEach((drawer) => drawer.addEventListener("click", (event) => { const labels = ["DRAWER CONTAINS: ONE DUSTY USB", "DRAWER CONTAINS: A WEEKEND", "DRAWER CONTAINS: NOTHING, LOUDLY"]; tone(240 + Math.random() * 180, .09, "square", -80); setStatus(labels[Number(drawer.dataset.drawer) - 1]); increase(5); pop(labels[Number(drawer.dataset.drawer) - 1], event); }));
+      document.querySelector("#big-sticker").addEventListener("click", (event) => { tone(100, .18, "sawtooth", 520, .04); tone(620, .13, "square", -340, .025); setStatus("SYSTEM STATUS: you were specifically told not to"); increase(16); pop("THE STICKER REMEMBERS THIS.", event); });
+      document.querySelector("#tiny-sticker").addEventListener("click", (event) => { tone(880, .04, "square", -300, .018); visitor += 37; document.querySelector("#counter").textContent = `VISITOR COUNTER: ${String(visitor).padStart(8, "0")}`; pop("visitor counter adjusted for morale", event); });
+      document.addEventListener("pointerdown", (event) => { if (event.target.closest("a, button, .employee, .hero-apple")) return; tone(310 + Math.random() * 90, .025, "square", -40, .009); });
+    })();
   </script>
 </body>
 </html>
