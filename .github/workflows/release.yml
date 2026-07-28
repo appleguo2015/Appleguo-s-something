@@ -37,7 +37,21 @@ jobs:
       - name: Build Windows package
         if: runner.os == 'Windows'
         shell: msys2 {0}
-        run: make OS=Windows_NT
+        id: build_windows
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          make OS=Windows_NT 2>&1 | tee windows-build.log
+      - name: Upload Windows build log
+        if: runner.os == 'Windows' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: appleguo-windows-build-log
+          path: windows-build.log
+      - name: Report Windows build failure
+        if: runner.os == 'Windows' && steps.build_windows.outcome == 'failure'
+        shell: msys2 {0}
+        run: exit 1
       - name: Build Linux package
         if: runner.os == 'Linux'
         run: make STATIC=1
