@@ -100,7 +100,9 @@
     .prize-note { position: absolute; z-index: 1; max-width: 180px; padding: 7px; border: 2px solid var(--ink); background: var(--paper); box-shadow: 3px 3px 0 var(--ink); font-size: 10px; font-weight: bold; line-height: 1.25; animation: prize-float 1.7s ease-in-out infinite alternate; }
     .prize-stamp { position: absolute; z-index: 1; display: grid; place-items: center; width: 82px; height: 82px; border: 3px solid var(--ink); border-radius: 50%; background: var(--red); color: white; font-size: 11px; font-weight: bold; text-align: center; animation: spin 1.4s linear infinite; }
     .potato-cursor { position: fixed; z-index: 100; top: 0; left: 0; width: 46px; height: 61px; display: none; object-fit: contain; pointer-events: none; transform: translate3d(var(--cursor-x, -100px), var(--cursor-y, -100px), 0) rotate(-9deg); transform-origin: 16% 12%; transition: transform .08s ease-out; will-change: transform; }
+    .potato-cursor.is-hovering-ui { transform: translate3d(var(--cursor-x, -100px), var(--cursor-y, -100px), 0) rotate(-28deg) scale(1.12, .88); }
     .potato-cursor.is-clicking { transform: translate3d(var(--cursor-x, -100px), var(--cursor-y, -100px), 0) rotate(18deg) scale(.92, 1.07); }
+    .potato-cursor.is-hovering-ui.is-clicking { transform: translate3d(var(--cursor-x, -100px), var(--cursor-y, -100px), 0) rotate(28deg) scale(1.02, .94); }
     @keyframes spin { to { transform: rotate(372deg); } }
     @keyframes pop-out { 0%, 78% { opacity: 1; } 100% { opacity: 0; transform: translateY(-18px) rotate(4deg); } }
     @keyframes prize-float { to { transform: translateY(-11px) rotate(3deg); } }
@@ -165,7 +167,7 @@
       document.querySelectorAll(".drawer").forEach((drawer) => drawer.addEventListener("click", (event) => { const labels = ["DRAWER CONTAINS: ONE DUSTY USB", "DRAWER CONTAINS: A WEEKEND", "DRAWER CONTAINS: NOTHING, LOUDLY"]; tone(240 + Math.random() * 180, .09, "square", -80); setStatus(labels[Number(drawer.dataset.drawer) - 1]); increase(5); pop(labels[Number(drawer.dataset.drawer) - 1], event); }));
       document.querySelector("#big-sticker").addEventListener("click", (event) => { tone(100, .18, "sawtooth", 520, .04); tone(620, .13, "square", -340, .025); setStatus("SYSTEM STATUS: you were specifically told not to"); increase(16); pop("THE STICKER REMEMBERS THIS.", event); });
       document.querySelector("#tiny-sticker").addEventListener("click", (event) => { tone(880, .04, "square", -300, .018); visitor += 37; document.querySelector("#counter").textContent = `VISITOR COUNTER: ${String(visitor).padStart(8, "0")}`; pop("visitor counter adjusted for morale", event); });
-      document.addEventListener("pointermove", (event) => { potatoCursor.style.setProperty("--cursor-x", `${event.clientX - 7}px`); potatoCursor.style.setProperty("--cursor-y", `${event.clientY - 5}px`); });
+      document.addEventListener("pointermove", (event) => { potatoCursor.style.setProperty("--cursor-x", `${event.clientX - 7}px`); potatoCursor.style.setProperty("--cursor-y", `${event.clientY - 5}px`); potatoCursor.classList.toggle("is-hovering-ui", Boolean(event.target.closest("a, button, .employee, .hero-apple"))); });
       document.addEventListener("pointerdown", () => potatoCursor.classList.add("is-clicking"));
       document.addEventListener("pointerup", () => potatoCursor.classList.remove("is-clicking"));
       document.addEventListener("pointercancel", () => potatoCursor.classList.remove("is-clicking"));
