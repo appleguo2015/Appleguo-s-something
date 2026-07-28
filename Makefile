@@ -14,6 +14,7 @@ TARGET := out/virtual_singer$(EXE_SUFFIX)
 SOURCE := src/main.cpp
 ASSET_DIR := out/assets
 DIST_DIR := dist
+SITE_DIST_DIR := $(DIST_DIR)/site
 
 CXXFLAGS := -std=c++17 -Wall -Wextra -Wpedantic -Wno-missing-field-initializers $(shell $(PKG_CONFIG) --cflags raylib)
 ifeq ($(STATIC),1)
@@ -22,7 +23,7 @@ else
 LDLIBS := $(shell $(PKG_CONFIG) --libs raylib)
 endif
 
-.PHONY: all run assets app package clean
+.PHONY: all run assets app package site clean
 
 all: $(TARGET) assets
 
@@ -54,6 +55,11 @@ app: all
 	./scripts/package-macos.sh
 
 package: app
+
+site:
+	mkdir -p $(SITE_DIST_DIR)/assets/images
+	cp index.html $(SITE_DIST_DIR)/index.html
+	rsync -a --delete assets/images/ $(SITE_DIST_DIR)/assets/images/
 
 clean:
 	rm -rf out $(DIST_DIR)
