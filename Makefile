@@ -6,6 +6,8 @@ ifeq ($(OS),Windows_NT)
 EXE_SUFFIX := .exe
 WINDOWS_ICON := scripts/windows/appleguo.ico
 WINDOWS_RESOURCE := out/appleguo.res
+BANANA_WINDOWS_ICON := scripts/windows/banana.ico
+BANANA_WINDOWS_RESOURCE := out/banana.res
 else
 EXE_SUFFIX :=
 endif
@@ -25,18 +27,21 @@ else
 LDLIBS := $(shell $(PKG_CONFIG) --libs raylib)
 endif
 
-.PHONY: all run assets app package banana banana-run site clean
+.PHONY: all run assets app package banana banana-run banana-app banana-package site clean
 
 all: $(TARGET) assets
 
 $(TARGET): $(SOURCE) $(WINDOWS_RESOURCE) | out
 	$(CXX) $(CXXFLAGS) $(SOURCE) $(WINDOWS_RESOURCE) -o $@ $(LDLIBS)
 
-$(BANANA_TARGET): $(BANANA_SOURCE) $(WINDOWS_RESOURCE) | out
-	$(CXX) $(CXXFLAGS) $(BANANA_SOURCE) $(WINDOWS_RESOURCE) -o $@ $(LDLIBS)
+$(BANANA_TARGET): $(BANANA_SOURCE) $(BANANA_WINDOWS_RESOURCE) | out
+	$(CXX) $(CXXFLAGS) $(BANANA_SOURCE) $(BANANA_WINDOWS_RESOURCE) -o $@ $(LDLIBS)
 
 ifeq ($(OS),Windows_NT)
 $(WINDOWS_RESOURCE): scripts/windows/app.rc $(WINDOWS_ICON) | out
+	$(WINDRES) $< -O coff -o $@
+
+$(BANANA_WINDOWS_RESOURCE): scripts/windows/banana.rc $(BANANA_WINDOWS_ICON) | out
 	$(WINDRES) $< -O coff -o $@
 endif
 
@@ -60,6 +65,11 @@ banana: $(BANANA_TARGET) assets
 
 banana-run: banana
 	cd out && ./banana_dance
+
+banana-app: banana
+	./scripts/package-banana-macos.sh
+
+banana-package: banana-app
 
 app: all
 	./scripts/package-macos.sh
