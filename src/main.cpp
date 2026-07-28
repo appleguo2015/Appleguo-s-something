@@ -15,6 +15,7 @@ namespace {
 
 constexpr int kWidth = 300;
 constexpr int kHeight = 240;
+constexpr double kPhonemeCrossfadeSeconds = 0.025;
 
 const std::vector<std::string> kPhonemeNames = {
     "AA", "AE", "AH", "AO", "AX", "ER", "EH", "IH", "IY", "UH",
@@ -168,9 +169,9 @@ private:
         PlaySound(sounds_.at(current_));
         const double now = GetTime();
         const double duration = durations_.at(current_);
-        // Begin the following sample before this one finishes. This removes the
-        // silent gap caused by individually recorded phoneme tails.
-        nextStartTime_ = now + duration * 0.75;
+        // The WAV edges are faded and adjacent sounds overlap briefly. A fixed
+        // interval keeps short consonants from rushing more than long vowels.
+        nextStartTime_ = now + std::max(0.01, duration - kPhonemeCrossfadeSeconds);
         finishTime_ = now + duration;
         playing_ = true;
     }
