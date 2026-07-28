@@ -8,8 +8,8 @@
 
 namespace {
 
-constexpr int kWindowWidth = 700;
-constexpr int kWindowHeight = 540;
+constexpr int kWindowWidth = 600;
+constexpr int kWindowHeight = 645;
 constexpr Color kInk = {20, 16, 12, 255};
 void UseApplicationResources() {
     namespace fs = std::filesystem;
@@ -72,7 +72,8 @@ Mesh CopyDynamicMesh(const Mesh& source) {
 
 int main() {
     UseApplicationResources();
-    SetConfigFlags(FLAG_WINDOW_UNDECORATED | FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
+    SetConfigFlags(FLAG_WINDOW_UNDECORATED | FLAG_WINDOW_RESIZABLE |
+                   FLAG_WINDOW_TRANSPARENT | FLAG_MSAA_4X_HINT);
     InitWindow(kWindowWidth, kWindowHeight, "BANANA DANCE");
     SetTargetFPS(60);
 
@@ -123,7 +124,7 @@ int main() {
         UpdateMeshBuffer(morphBanana.meshes[0], 0, morphVertices.data(),
                          static_cast<int>(morphVertices.size() * sizeof(float)), 0);
 
-        const float scale = maximized ? 0.42f : 0.34f;
+        const float scale = maximized ? 0.65f : 0.50f;
         const float uiScale = maximized ? 1.12f : 1.0f;
         const int width = GetScreenWidth();
         const int height = GetScreenHeight();
@@ -161,7 +162,7 @@ int main() {
         EndTextureMode();
 
         BeginDrawing();
-        ClearBackground({238, 221, 191, 255});
+        ClearBackground(BLANK);
         DrawTexturePro(cardboard, {0, 0, static_cast<float>(cardboard.width), static_cast<float>(cardboard.height)},
                        {0, 0, static_cast<float>(width), static_cast<float>(height)}, {0, 0}, 0.0f, WHITE);
 
@@ -176,6 +177,9 @@ int main() {
             }
         }
         DrawTexturePro(bananaLayer.texture, source, {0, 0, static_cast<float>(width), static_cast<float>(height)}, {0, 0}, 0.0f, WHITE);
+        const Color titleColor = ColorFromHSV(fmodf(danceTime * 220.0f, 360.0f), 0.88f, 1.0f);
+        DrawText("BANANA DANCING.EXE", 33, 31, 19, BLACK);
+        DrawText("BANANA DANCING.EXE", 31, 29, 19, titleColor);
         DrawImageButton(minimize, minButton);
         DrawImageButton(maximize, maxButton);
         DrawImageButton(close, closeButton);
