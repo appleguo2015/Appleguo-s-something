@@ -37,9 +37,15 @@ endif
 out:
 	mkdir -p out
 
+ifeq ($(OS),Windows_NT)
+assets: | out
+	rm -rf $(ASSET_DIR)
+	cp -R assets $(ASSET_DIR)
+else
 assets: | out
 	mkdir -p $(ASSET_DIR)
 	rsync -a --delete assets/ $(ASSET_DIR)/
+endif
 
 run: all
 	cd out && ./virtual_singer
