@@ -3,7 +3,7 @@ PKG_CONFIG ?= pkg-config
 
 ifeq ($(OS),Windows_NT)
 EXE_SUFFIX := .exe
-WINDOWS_ICON := out/appleguo.ico
+WINDOWS_ICON := scripts/windows/appleguo.ico
 WINDOWS_RESOURCE := out/appleguo.res
 else
 EXE_SUFFIX :=
@@ -29,10 +29,6 @@ $(TARGET): $(SOURCE) $(WINDOWS_RESOURCE) | out
 	$(CXX) $(CXXFLAGS) $(SOURCE) $(WINDOWS_RESOURCE) -o $@ $(LDLIBS)
 
 ifeq ($(OS),Windows_NT)
-$(WINDOWS_ICON): assets/images/apple.png | out
-	magick $< -resize 256x256 -background none -gravity center -extent 256x256 \
-		-define icon:auto-resize=256,128,64,48,32,16 $@
-
 $(WINDOWS_RESOURCE): scripts/windows/app.rc $(WINDOWS_ICON)
 	windres $< -O coff -o $@
 endif

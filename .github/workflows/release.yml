@@ -14,7 +14,7 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact: appleguo-voice-linux
-            install: sudo apt-get update && sudo apt-get install -y build-essential pkg-config libraylib-dev
+            install: sudo add-apt-repository -y universe && sudo apt-get update && sudo apt-get install -y build-essential pkg-config libraylib-dev
           - os: windows-latest
             artifact: appleguo-voice-windows
             install: ''
@@ -33,7 +33,7 @@ jobs:
         with:
           msystem: MINGW64
           update: true
-          install: mingw-w64-x86_64-gcc mingw-w64-x86_64-raylib mingw-w64-x86_64-pkgconf mingw-w64-x86_64-imagemagick make
+          install: mingw-w64-x86_64-gcc mingw-w64-x86_64-raylib mingw-w64-x86_64-pkgconf make
       - name: Build Windows package
         if: runner.os == 'Windows'
         shell: msys2 {0}
