@@ -105,15 +105,31 @@ int main() {
 
     bool maximized = false;
     float danceTime = 0.0f;
+    float uiHoverBlend = 0.0f;
     while (!WindowShouldClose()) {
-        danceTime += GetFrameTime();
+        const float frameTime = GetFrameTime();
+        danceTime += frameTime;
+        const float scale = maximized ? 0.65f : 0.50f;
+        const float uiScale = maximized ? 1.12f : 1.0f;
+        const int width = GetScreenWidth();
+        const int height = GetScreenHeight();
+        const Rectangle minButton{static_cast<float>(width) - 148.0f * uiScale, 19.0f, 52.0f * uiScale, 38.0f * uiScale};
+        const Rectangle maxButton{static_cast<float>(width) - 91.0f * uiScale, 17.0f, 40.0f * uiScale, 40.0f * uiScale};
+        const Rectangle closeButton{static_cast<float>(width) - 46.0f * uiScale, 16.0f, 35.0f * uiScale, 39.0f * uiScale};
+        const Vector2 mouse = GetMousePosition();
+        const bool hoveringUi = CheckCollisionPointRec(mouse, minButton) ||
+                                CheckCollisionPointRec(mouse, maxButton) ||
+                                CheckCollisionPointRec(mouse, closeButton);
+
         // Six frames at 60 FPS. The form hits its full "dance" shape exactly
         // 0.1 seconds after leaving the base shape, then returns in 0.1 seconds.
         constexpr float kMorphDuration = 0.1f;
         const float cycleTime = fmodf(danceTime, kMorphDuration * 2.0f);
-        const float phase = cycleTime <= kMorphDuration
+        const float dancePhase = cycleTime <= kMorphDuration
             ? cycleTime / kMorphDuration
             : 1.0f - (cycleTime - kMorphDuration) / kMorphDuration;
+        uiHoverBlend = Clamp(uiHoverBlend + (hoveringUi ? 1.0f : -1.0f) * frameTime / kMorphDuration, 0.0f, 1.0f);
+        const float phase = Lerp(dancePhase, 1.0f, uiHoverBlend);
         const float turn = danceTime * 152.0f;
         const float hop = sinf(danceTime * 5.0f) * 0.16f + phase * 0.12f;
 
@@ -124,20 +140,12 @@ int main() {
         UpdateMeshBuffer(morphBanana.meshes[0], 0, morphVertices.data(),
                          static_cast<int>(morphVertices.size() * sizeof(float)), 0);
 
-        const float scale = maximized ? 0.65f : 0.50f;
-        const float uiScale = maximized ? 1.12f : 1.0f;
-        const int width = GetScreenWidth();
-        const int height = GetScreenHeight();
         if (outlineLayer.texture.width != width || outlineLayer.texture.height != height) {
             UnloadRenderTexture(outlineLayer);
             UnloadRenderTexture(bananaLayer);
             outlineLayer = LoadRenderTexture(width, height);
             bananaLayer = LoadRenderTexture(width, height);
         }
-        const Rectangle minButton{static_cast<float>(width) - 148.0f * uiScale, 19.0f, 52.0f * uiScale, 38.0f * uiScale};
-        const Rectangle maxButton{static_cast<float>(width) - 91.0f * uiScale, 17.0f, 40.0f * uiScale, 40.0f * uiScale};
-        const Rectangle closeButton{static_cast<float>(width) - 46.0f * uiScale, 16.0f, 35.0f * uiScale, 39.0f * uiScale};
-
         if (ButtonHit(minButton)) MinimizeWindow();
         if (ButtonHit(maxButton)) {
             maximized = !maximized;
