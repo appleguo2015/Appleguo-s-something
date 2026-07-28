@@ -37,7 +37,7 @@ jobs:
         with:
           msystem: MINGW64
           update: true
-          install: mingw-w64-x86_64-gcc mingw-w64-x86_64-raylib mingw-w64-x86_64-pkgconf make
+          install: mingw-w64-x86_64-gcc mingw-w64-x86_64-binutils mingw-w64-x86_64-raylib mingw-w64-x86_64-pkgconf make
       - name: Build Windows package
         if: runner.os == 'Windows'
         shell: msys2 {0}
@@ -46,7 +46,7 @@ jobs:
         run: |
           set -o pipefail
           export PKG_CONFIG_PATH=/mingw64/lib/pkgconfig
-          make OS=Windows_NT CXX=x86_64-w64-mingw32-g++ WINDRES=x86_64-w64-mingw32-windres PKG_CONFIG=pkgconf 2>&1 | tee windows-build.log
+          make OS=Windows_NT CXX=g++ WINDRES=windres PKG_CONFIG=pkgconf 2>&1 | tee windows-build.log
       - name: Upload Windows build log
         if: runner.os == 'Windows' && always()
         uses: actions/upload-artifact@v4
