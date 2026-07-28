@@ -12,6 +12,8 @@ endif
 
 TARGET := out/virtual_singer$(EXE_SUFFIX)
 SOURCE := src/main.cpp
+BANANA_TARGET := out/banana_dance$(EXE_SUFFIX)
+BANANA_SOURCE := src/banana_main.cpp
 ASSET_DIR := out/assets
 DIST_DIR := dist
 SITE_DIST_DIR := $(DIST_DIR)/site
@@ -23,12 +25,15 @@ else
 LDLIBS := $(shell $(PKG_CONFIG) --libs raylib)
 endif
 
-.PHONY: all run assets app package site clean
+.PHONY: all run assets app package banana banana-run site clean
 
 all: $(TARGET) assets
 
 $(TARGET): $(SOURCE) $(WINDOWS_RESOURCE) | out
 	$(CXX) $(CXXFLAGS) $(SOURCE) $(WINDOWS_RESOURCE) -o $@ $(LDLIBS)
+
+$(BANANA_TARGET): $(BANANA_SOURCE) $(WINDOWS_RESOURCE) | out
+	$(CXX) $(CXXFLAGS) $(BANANA_SOURCE) $(WINDOWS_RESOURCE) -o $@ $(LDLIBS)
 
 ifeq ($(OS),Windows_NT)
 $(WINDOWS_RESOURCE): scripts/windows/app.rc $(WINDOWS_ICON) | out
@@ -50,6 +55,11 @@ endif
 
 run: all
 	cd out && ./virtual_singer
+
+banana: $(BANANA_TARGET) assets
+
+banana-run: banana
+	cd out && ./banana_dance
 
 app: all
 	./scripts/package-macos.sh
