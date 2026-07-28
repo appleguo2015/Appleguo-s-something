@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>404 / AppleGuo's Something</title>
+  <link rel="icon" href="assets/images/apple.png">
+  <style>
+    :root { --ink: #151515; --paper: #fff; --acid: #dfff00; --red: #f1463c; --blue: #4b69ff; --line: 3px solid var(--ink); }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body { margin: 0; overflow: hidden; color: var(--ink); background: var(--paper); font-family: "Courier New", Courier, monospace; }
+    button, a { color: inherit; font: inherit; }
+    .bar { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 40px; padding: 7px 13px; border-bottom: var(--line); font-size: 11px; font-weight: bold; }
+    .bar p { margin: 0; }
+    .controls { display: flex; gap: 4px; }
+    .controls button { min-height: 25px; border: 1px solid var(--ink); background: var(--paper); padding: 3px 7px; font-size: 10px; font-weight: bold; cursor: pointer; }
+    .controls button:hover, .controls button.active { background: var(--acid); }
+    main { position: relative; min-height: calc(100vh - 40px); display: grid; place-items: center; padding: 30px 20px; }
+    .error { position: relative; z-index: 1; width: min(710px, 100%); text-align: center; }
+    .code { margin: 0; color: var(--red); font-size: clamp(108px, 30vw, 310px); font-weight: bold; line-height: .67; letter-spacing: 0; text-shadow: 7px 7px 0 var(--ink); }
+    .notice { width: min(470px, 100%); margin: 36px auto 0; padding: 20px; border: var(--line); background: var(--acid); box-shadow: 8px 8px 0 var(--ink); transform: rotate(-1.4deg); }
+    .notice h1 { margin: 0; font-size: clamp(22px, 4vw, 38px); line-height: .98; }
+    .notice p { margin: 14px 0 0; font-size: 13px; font-weight: bold; line-height: 1.45; }
+    .actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
+    .action { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; border: var(--line); padding: 9px 12px; background: var(--paper); box-shadow: 4px 4px 0 var(--ink); font-size: 11px; font-weight: bold; text-decoration: none; cursor: pointer; }
+    .action:hover { transform: translate(2px, 2px) rotate(-1deg); box-shadow: 2px 2px 0 var(--ink); background: var(--blue); color: white; }
+    .apple { position: absolute; z-index: 1; top: 15%; left: max(3%, calc(50% - 480px)); width: 115px; height: 150px; object-fit: contain; filter: drop-shadow(5px 6px 0 var(--ink)); animation: wobble 2.2s ease-in-out infinite alternate; cursor: pointer; }
+    .orbit { position: absolute; z-index: 0; width: 620px; height: 620px; border: 2px dashed var(--ink); border-radius: 50%; animation: spin 24s linear infinite; }
+    .orbit i { position: absolute; top: 46px; left: 90px; display: grid; place-items: center; width: 48px; height: 48px; border: 2px solid var(--ink); border-radius: 50%; background: var(--blue); color: white; font-size: 11px; font-style: normal; font-weight: bold; }
+    .orbit i:nth-child(2) { top: auto; bottom: 61px; left: auto; right: 74px; background: var(--acid); color: var(--ink); }
+    .orbit i:nth-child(3) { top: 48%; left: auto; right: -25px; background: var(--red); }
+    .label { position: absolute; right: 4%; bottom: 7%; z-index: 2; padding: 6px; border: 2px solid var(--ink); background: var(--paper); font-size: 10px; font-weight: bold; transform: rotate(8deg); }
+    .signal { position: absolute; bottom: 9%; left: 5%; z-index: 2; max-width: 180px; padding: 8px; border: 2px solid var(--ink); background: var(--paper); box-shadow: 4px 4px 0 var(--ink); font-size: 10px; font-weight: bold; transform: rotate(-5deg); }
+    .signal.jump { animation: jump .26s steps(2) 5; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes wobble { to { transform: rotate(13deg) translateY(-9px); } }
+    @keyframes jump { 50% { transform: translate(9px, -12px) rotate(4deg); background: var(--red); } }
+    @media (max-width: 620px) { .bar p { display: none; } .bar { justify-content: end; } .orbit { width: 420px; height: 420px; } .apple { top: 7%; left: 7%; width: 83px; height: 110px; } .notice { margin-top: 32px; } .signal { left: 13px; bottom: 18px; max-width: 130px; } .label { right: 10px; bottom: 15px; } }
+  </style>
+</head>
+<body>
+  <div class="bar"><p id="bar-text">APPLEGUO'S SOMETHING / LOST OBJECT DEPARTMENT</p><div class="controls"><button type="button" data-language="en">EN</button><button type="button" data-language="zh">中文</button><button type="button" id="sound">SOUND: OFF</button></div></div>
+  <main>
+    <div class="orbit" aria-hidden="true"><i>404</i><i>?</i><i>?</i></div>
+    <img class="apple" id="apple" src="assets/images/apple.png" alt="AppleGuo apple mascot">
+    <div class="error"><p class="code">404</p><section class="notice"><h1 id="title">THIS PAGE ESCAPED TO MARS STREET.</h1><p id="copy">We checked under the desk, inside the banana award, and behind the apple. It is definitely not here.</p><div class="actions"><a class="action" id="home" href="index.html">RETURN TO THE CABINET</a><button class="action" id="search" type="button">ASK THE APPLE</button></div></section></div>
+    <p class="signal" id="signal">SIGNAL: page location unknown</p><p class="label" id="label">DO NOT FEED THE 404</p>
+  </main>
+  <script>
+    (() => {
+      const content = {
+        en: { bar: "APPLEGUO'S SOMETHING / LOST OBJECT DEPARTMENT", title: "THIS PAGE ESCAPED TO MARS STREET.", copy: "We checked under the desk, inside the banana award, and behind the apple. It is definitely not here.", home: "RETURN TO THE CABINET", search: "ASK THE APPLE", signal: "SIGNAL: page location unknown", label: "DO NOT FEED THE 404", found: "APPLE REPORT: it went left, then somehow up.", beep: "SIGNAL: apple made a small noise" },
+        zh: { bar: "APPLEGUO 的小东西 / 失物招领处", title: "这个页面逃去火星大街了。", copy: "我们找了桌子下面、香蕉奖杯里面和苹果背后。它确定不在这里。", home: "回到下载柜", search: "问问苹果", signal: "信号：页面位置未知", label: "请勿投喂 404", found: "苹果报告：它先往左走，然后莫名往上了。", beep: "信号：苹果发出了很小的声音" }
+      };
+      let language = localStorage.getItem("appleguo-language") || "en", context, muted = true;
+      const $ = (id) => document.querySelector(id);
+      const render = () => { const t = content[language]; document.documentElement.lang = language === "zh" ? "zh-CN" : "en"; $("#bar-text").textContent = t.bar; $("#title").textContent = t.title; $("#copy").textContent = t.copy; $("#home").textContent = t.home; $("#search").textContent = t.search; $("#signal").textContent = t.signal; $("#label").textContent = t.label; document.querySelectorAll("[data-language]").forEach((button) => button.classList.toggle("active", button.dataset.language === language)); };
+      const beep = (freq = 560) => { if (muted) return; if (!context) context = new (window.AudioContext || window.webkitAudioContext)(); const o = context.createOscillator(), g = context.createGain(); o.type = "square"; o.frequency.setValueAtTime(freq, context.currentTime); o.frequency.exponentialRampToValueAtTime(freq * .63, context.currentTime + .12); g.gain.setValueAtTime(.035, context.currentTime); g.gain.exponentialRampToValueAtTime(.001, context.currentTime + .13); o.connect(g).connect(context.destination); o.start(); o.stop(context.currentTime + .13); };
+      document.querySelectorAll("[data-language]").forEach((button) => button.addEventListener("click", () => { language = button.dataset.language; localStorage.setItem("appleguo-language", language); render(); }));
+      $("#sound").addEventListener("click", () => { muted = !muted; $("#sound").textContent = muted ? "SOUND: OFF" : "SOUND: ON"; beep(660); });
+      $("#search").addEventListener("click", () => { $("#signal").textContent = content[language].found; $("#signal").classList.remove("jump"); void $("#signal").offsetWidth; $("#signal").classList.add("jump"); beep(410); setTimeout(() => beep(690), 95); });
+      $("#apple").addEventListener("click", () => { $("#signal").textContent = content[language].beep; beep(770); });
+      render();
+    })();
+  </script>
+</body>
+</html>

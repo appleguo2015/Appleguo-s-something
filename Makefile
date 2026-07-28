@@ -59,6 +59,7 @@ package: app
 site:
 	mkdir -p $(SITE_DIST_DIR)/assets/images
 	cp index.html $(SITE_DIST_DIR)/index.html
+	cp 404.html $(SITE_DIST_DIR)/404.html
 	rsync -a --delete assets/images/ $(SITE_DIST_DIR)/assets/images/
 
 clean:
