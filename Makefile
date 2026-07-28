@@ -30,7 +30,7 @@ $(TARGET): $(SOURCE) $(WINDOWS_RESOURCE) | out
 	$(CXX) $(CXXFLAGS) $(SOURCE) $(WINDOWS_RESOURCE) -o $@ $(LDLIBS)
 
 ifeq ($(OS),Windows_NT)
-$(WINDOWS_RESOURCE): scripts/windows/app.rc $(WINDOWS_ICON)
+$(WINDOWS_RESOURCE): scripts/windows/app.rc $(WINDOWS_ICON) | out
 	$(WINDRES) $< -O coff -o $@
 endif
 
