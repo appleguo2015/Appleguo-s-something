@@ -37,7 +37,7 @@ jobs:
       - name: Build Windows package
         if: runner.os == 'Windows'
         shell: msys2 {0}
-        run: make
+        run: make OS=Windows_NT
       - name: Build Linux package
         if: runner.os == 'Linux'
         run: make STATIC=1

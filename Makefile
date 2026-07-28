@@ -1,5 +1,6 @@
 CXX ?= c++
 PKG_CONFIG ?= pkg-config
+WINDRES ?= windres
 
 ifeq ($(OS),Windows_NT)
 EXE_SUFFIX := .exe
@@ -30,7 +31,7 @@ $(TARGET): $(SOURCE) $(WINDOWS_RESOURCE) | out
 
 ifeq ($(OS),Windows_NT)
 $(WINDOWS_RESOURCE): scripts/windows/app.rc $(WINDOWS_ICON)
-	windres $< -O coff -o $@
+	$(WINDRES) $< -O coff -o $@
 endif
 
 out:
