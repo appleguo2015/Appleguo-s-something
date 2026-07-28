@@ -50,6 +50,17 @@
     .specs { align-self: stretch; padding: 22px; border-left: var(--line); background: #f5e7ae; font-size: 12px; line-height: 1.7; }
     .specs p { margin: 0; border-bottom: 1px dashed var(--ink); }
     .specs strong { display: block; }
+    .staff { padding: 30px; border-bottom: var(--line); background: var(--blue); }
+    .staff-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 18px; color: var(--paper); }
+    .staff-head h2 { margin: 0; font-size: 37px; line-height: 1; }
+    .staff-head p { margin: 0; font-size: 12px; text-align: right; }
+    .staff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .employee { position: relative; overflow: hidden; border: var(--line); background: var(--paper); box-shadow: 6px 6px 0 var(--ink); }
+    .employee img { width: 100%; aspect-ratio: 4 / 5; display: block; object-fit: cover; object-position: center top; border-bottom: var(--line); background: #f5e7ae; }
+    .employee--apple img { object-fit: contain; padding: 12px; background: var(--yellow); }
+    .employee h3 { min-height: 54px; display: flex; align-items: center; margin: 0; padding: 10px 12px; font-size: 16px; line-height: 1.15; }
+    .employee--award h3 { padding-right: 54px; color: var(--paper); background: var(--red); }
+    .award { position: absolute; right: 10px; bottom: 10px; width: 35px; height: 35px; display: grid; place-items: center; border: 2px solid var(--ink); background: var(--yellow); transform: rotate(11deg); }
     .cabinet { padding: 30px; background: var(--green); border-bottom: var(--line); }
     .cabinet-title { display: flex; justify-content: space-between; gap: 16px; align-items: end; margin-bottom: 18px; }
     .cabinet h2 { margin: 0; font-size: 32px; }
@@ -62,7 +73,7 @@
     footer { display: flex; justify-content: space-between; gap: 18px; padding: 14px 18px; background: var(--ink); color: var(--paper); font-size: 11px; }
     footer p { margin: 0; }
     body.dial-mode { --yellow: #ff5b4d; --red: #3b54cf; --blue: #65b35e; --green: #f1d759; }
-    @media (max-width: 720px) { .shell { width: min(100% - 18px, 560px); margin: 9px auto; box-shadow: 6px 6px 0 var(--ink); } header { padding: 12px; } .top-note { display: none; } .hero { grid-template-columns: 1fr; min-height: 0; } .hero-copy { padding: 30px 20px; } h1 { font-size: 48px; } .hero-art { min-height: 250px; border-top: var(--line); border-left: 0; } .hero-art img { height: 230px; } .feature { grid-template-columns: 70px 1fr; } .serial { min-height: 220px; font-size: 13px; } .feature-copy { padding: 24px 18px; } .feature-copy h2 { font-size: 30px; } .specs { grid-column: 1 / -1; border-top: var(--line); border-left: 0; } .slots { grid-template-columns: 1fr; } .cabinet { padding: 23px 18px; } footer { flex-direction: column; } }
+    @media (max-width: 720px) { .shell { width: min(100% - 18px, 560px); margin: 9px auto; box-shadow: 6px 6px 0 var(--ink); } header { padding: 12px; } .top-note { display: none; } .hero { grid-template-columns: 1fr; min-height: 0; } .hero-copy { padding: 30px 20px; } h1 { font-size: 48px; } .hero-art { min-height: 250px; border-top: var(--line); border-left: 0; } .hero-art img { height: 230px; } .feature { grid-template-columns: 70px 1fr; } .serial { min-height: 220px; font-size: 13px; } .feature-copy { padding: 24px 18px; } .feature-copy h2 { font-size: 30px; } .specs { grid-column: 1 / -1; border-top: var(--line); border-left: 0; } .staff { padding: 23px 18px; } .staff-head { align-items: start; flex-direction: column; } .staff-head h2 { font-size: 31px; } .staff-head p { text-align: left; } .staff-grid { grid-template-columns: 1fr; } .employee img { aspect-ratio: 4 / 4.3; } .slots { grid-template-columns: 1fr; } .cabinet { padding: 23px 18px; } footer { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -99,6 +110,15 @@
         </div>
       </div>
       <aside class="specs"><strong>FIELD NOTES</strong><p>OFFLINE / C++ / RAYLIB</p><p>ENGLISH PHONEMES</p><p>NO LIPSYNC</p><p>YES SQUASHING</p><p>VERSION 0.1.9</p></aside>
+    </section>
+
+    <section class="staff" id="staff">
+      <div class="staff-head"><h2>我们的员工</h2><p>REAL STAFF / VERY SERIOUS / PLEASE DO NOT ASK QUESTIONS</p></div>
+      <div class="staff-grid">
+        <article class="employee"><img src="assets/images/staff/potato.png" alt="土豆员工证件照"><h3>土豆</h3></article>
+        <article class="employee employee--award"><img src="assets/images/staff/banana.png" alt="香蕉员工证件照"><h3>[2026最佳员工]香蕉</h3><span class="award" title="2026最佳员工"><i data-lucide="award" aria-hidden="true"></i></span></article>
+        <article class="employee employee--apple"><img src="assets/images/apple.png" alt="appleguo"><h3>appleguo</h3></article>
+      </div>
     </section>
 
     <section class="cabinet">
