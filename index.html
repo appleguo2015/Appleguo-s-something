@@ -10,7 +10,10 @@
     :root { --ink: #151515; --paper: #fff; --acid: #dfff00; --red: #f1463c; --blue: #4b69ff; --line: 2px solid var(--ink); }
     * { box-sizing: border-box; }
     html { background: var(--paper); }
-    body { min-width: 320px; margin: 0; overflow-x: hidden; color: var(--ink); background: var(--paper); font-family: "Courier New", Courier, monospace; }
+    body { min-width: 320px; margin: 0; overflow-x: hidden; color: var(--ink); background: var(--paper); font-family: "Courier New", Courier, monospace; cursor: url("assets/images/potato-cursor-small.png") 7 7, auto; }
+    body * { cursor: inherit; }
+    a:hover, button:hover, .employee:hover, .hero-apple:hover { cursor: url("assets/images/potato-cursor-hover.png") 9 10, pointer; }
+    a:active, button:active, .employee:active, .hero-apple:active { cursor: url("assets/images/potato-cursor-active.png") 9 9, pointer; }
     button, a { font: inherit; color: inherit; }
     button { cursor: pointer; }
     .topline { min-height: 34px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 14px; border-bottom: var(--line); font-size: 11px; font-weight: bold; }
@@ -99,15 +102,9 @@
     .prize-close:hover { background: var(--red); }
     .prize-note { position: absolute; z-index: 1; max-width: 180px; padding: 7px; border: 2px solid var(--ink); background: var(--paper); box-shadow: 3px 3px 0 var(--ink); font-size: 10px; font-weight: bold; line-height: 1.25; animation: prize-float 1.7s ease-in-out infinite alternate; }
     .prize-stamp { position: absolute; z-index: 1; display: grid; place-items: center; width: 82px; height: 82px; border: 3px solid var(--ink); border-radius: 50%; background: var(--red); color: white; font-size: 11px; font-weight: bold; text-align: center; animation: spin 1.4s linear infinite; }
-    .potato-cursor { position: fixed; z-index: 100; top: 0; left: 0; width: 46px; height: 61px; display: none; object-fit: contain; pointer-events: none; transform: translate3d(var(--cursor-x, -100px), var(--cursor-y, -100px), 0) rotate(-9deg); transform-origin: 16% 12%; transition: transform .08s ease-out; will-change: transform; }
-    .potato-cursor.is-hovering-ui { transform: translate3d(var(--cursor-x, -100px), var(--cursor-y, -100px), 0) rotate(-28deg) scale(1.12, .88); }
-    .potato-cursor.is-clicking { transform: translate3d(var(--cursor-x, -100px), var(--cursor-y, -100px), 0) rotate(18deg) scale(.92, 1.07); }
-    .potato-cursor.is-hovering-ui.is-clicking { transform: translate3d(var(--cursor-x, -100px), var(--cursor-y, -100px), 0) rotate(28deg) scale(1.02, .94); }
     @keyframes spin { to { transform: rotate(372deg); } }
     @keyframes pop-out { 0%, 78% { opacity: 1; } 100% { opacity: 0; transform: translateY(-18px) rotate(4deg); } }
     @keyframes prize-float { to { transform: translateY(-11px) rotate(3deg); } }
-    html.has-potato-cursor body, html.has-potato-cursor body * { cursor: none !important; }
-    html.has-potato-cursor .potato-cursor { display: block; }
     @media (max-width: 720px) { .page { width: min(100% - 20px, 560px); } .topline p:first-child { display: none; } header { align-items: start; flex-direction: column; } .nav { justify-content: start; } .hero { grid-template-columns: 1fr; } .hero-copy { padding: 34px 0 29px; } .apple-zone { min-height: 245px; border-top: var(--line); border-left: 0; } .hero-apple { height: 230px; } .feature { grid-template-columns: 66px 1fr; } .index { min-height: 210px; font-size: 13px; } .feature-copy { padding: 24px 17px; } .specs { grid-column: 1 / -1; border-top: var(--line); border-left: 0; } .staff { padding-top: 24px; } .section-head { align-items: start; flex-direction: column; } .section-head p { text-align: left; } .staff-grid { grid-template-columns: 1fr; } .employee img { aspect-ratio: 4 / 3; } .cabinet { grid-template-columns: 1fr; } .drawer-copy { padding: 24px 0; } .control-panel { margin: 0 0 25px; } .sticker--b { display: none; } footer { flex-direction: column; } }
   </style>
 </head>
@@ -132,15 +129,11 @@
     <div class="prize-core"><h2 id="prize-title" data-i18n="prizeTitle">你中奖了！！！<br>banana x1！！！</h2><p data-i18n="prizeLead">快去火星大街领取吧！！！</p><p data-i18n="prizeTail">请保持激动。香蕉正在赶来。</p></div>
     <span class="prize-stamp" style="top:12%;left:12%" data-i18n="stampWow">WOW<br>WOW<br>WOW</span><span class="prize-stamp" style="right:10%;bottom:12%" data-i18n="stampWinner">BANANA<br>WINNER</span>
   </section>
-  <img class="potato-cursor" id="potato-cursor" src="assets/images/potato-cursor.png" alt="" aria-hidden="true">
   <script>
     (() => {
       const statuses = ["SYSTEM STATUS: quietly suspicious", "SYSTEM STATUS: banana has authority", "SYSTEM STATUS: potato is compiling", "SYSTEM STATUS: apple is listening", "SYSTEM STATUS: 4 tiny alarms ringing"];
       const appleWords = ["NORMAL APPLE", "VERY NORMAL", "APPLE ONLINE", "DO NOT ASK", "HELLO COMPUTER"];
       const status = document.querySelector("#status"), light = document.querySelector("#status-light"), soundToggle = document.querySelector("#sound-toggle"), meter = document.querySelector("#meter-fill"), meterLabel = document.querySelector("#meter-label");
-      const potatoCursor = document.querySelector("#potato-cursor");
-      const touchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-      if (!touchOnly) document.documentElement.classList.add("has-potato-cursor");
       let audio, muted = false, strange = 21, visitor = 1, language = localStorage.getItem("appleguo-language") || "en";
       const words = {
         en: { topline: "APPLEGUO'S SOMETHING / EST. 2026 / EARTH", downloads: "DOWNLOADS", staff: "STAFF", kicker: "PERSONAL COMPUTER OBJECTS / HANDLE CAREFULLY", heroTitle: "SMALL<br><em>STRANGE</em><br>THINGS", heroCopy: "tiny software, unfinished machines, sound toys, and other objects with a slightly wrong amount of personality. The download cabinet is open.", openCabinet: "OPEN CABINET", panic: "PRESS FOR NO REASON", tune: "TUNE SIGNAL", cabinet: "CABINET / 001", voiceCopy: "A tiny offline phoneme character. Type English or ARPAbet, press play, and let the apple read it in chopped little syllables while the 3D body squashes along.", windows: "WINDOWS ZIP", macos: "MACOS ZIP", fieldNotes: "FIELD NOTES", phonemes: "ENGLISH PHONEMES", lipsync: "NO LIPSYNC", squash: "YES SQUASHING", version: "VERSION 0.1.9", bananaCabinet: "CABINET / 002", bananaTitle: "BANANA<br>DANCING", bananaCopy: "A tiny 3D banana that morphs from 0 to 1 in 0.1 seconds, then immediately dances back. It lives in a transparent cardboard window and has absolutely no plan.", bananaWindows: "WINDOWS ZIP", bananaMacos: "MACOS ZIP", bananaNotes: "DANCE NOTES", bananaMorph: "0 -&gt; 1 -&gt; 0 / 0.2 SEC", bananaWindow: "TRANSPARENT CARDBOARD", bananaColor: "ALL COLORS: YES", bananaVersion: "VERSION 0.2.1", staffTitle: "OUR STAFF", staffCopy: "REAL STAFF / VERY SERIOUS / CLICK THEM, THEY ARE ALL TRAINED FOR THIS", potato: "POTATO", banana: "[2026 BEST EMPLOYEE] BANANA", approved: "APPROVED", awardAgain: "AWARD AGAIN", moreDrawers: "MORE DRAWERS", drawerCopy: "There is no product roadmap. There are only drawers, noises, and the faint possibility of an object becoming real.", drawer1: "01 / POKE THE DRAWER", drawer2: "02 / BAD IDEA", drawer3: "03 / CALL IT ART", device: "QUESTIONABLE DEVICE", footer: "NO TRACKING / NO FEED / JUST OBJECTS", doNotPress: "DO NOT<br>PRESS", prizeTitle: "YOU WON!!!<br>banana x1!!!", prizeLead: "Go claim it at Mars Street now!!!", prizeTail: "Please remain excited. Banana is on the way.", stampWow: "WOW<br>WOW<br>WOW", stampWinner: "BANANA<br>WINNER", soundWaiting: "SOUND: WAITING", soundOn: "SOUND: ON", soundMuted: "SOUND: MUTED", absurdity: "ABSURDITY" },
@@ -170,10 +163,6 @@
       document.querySelectorAll(".drawer").forEach((drawer) => drawer.addEventListener("click", (event) => { const labels = ["DRAWER CONTAINS: ONE DUSTY USB", "DRAWER CONTAINS: A WEEKEND", "DRAWER CONTAINS: NOTHING, LOUDLY"]; tone(240 + Math.random() * 180, .09, "square", -80); setStatus(labels[Number(drawer.dataset.drawer) - 1]); increase(5); pop(labels[Number(drawer.dataset.drawer) - 1], event); }));
       document.querySelector("#big-sticker").addEventListener("click", (event) => { tone(100, .18, "sawtooth", 520, .04); tone(620, .13, "square", -340, .025); setStatus("SYSTEM STATUS: you were specifically told not to"); increase(16); pop("THE STICKER REMEMBERS THIS.", event); });
       document.querySelector("#tiny-sticker").addEventListener("click", (event) => { tone(880, .04, "square", -300, .018); visitor += 37; document.querySelector("#counter").textContent = `VISITOR COUNTER: ${String(visitor).padStart(8, "0")}`; pop("visitor counter adjusted for morale", event); });
-      document.addEventListener("pointermove", (event) => { potatoCursor.style.setProperty("--cursor-x", `${event.clientX - 7}px`); potatoCursor.style.setProperty("--cursor-y", `${event.clientY - 5}px`); potatoCursor.classList.toggle("is-hovering-ui", Boolean(event.target.closest("a, button, .employee, .hero-apple"))); });
-      document.addEventListener("pointerdown", () => potatoCursor.classList.add("is-clicking"));
-      document.addEventListener("pointerup", () => potatoCursor.classList.remove("is-clicking"));
-      document.addEventListener("pointercancel", () => potatoCursor.classList.remove("is-clicking"));
       document.addEventListener("pointerdown", (event) => { if (event.target.closest("a, button, .employee, .hero-apple")) return; tone(310 + Math.random() * 90, .025, "square", -40, .009); });
     })();
   </script>
